@@ -70,22 +70,37 @@ public class PatternTests
         Assert.Same(club, inner.GetById(club.Id));
     }
 
+
     // ── Strategy ──
     [Fact]
     public void Strategy_SameData_RendersDifferentFormats()
     {
-        // Arrange
-        var stats = new List<ClubStat> { new("Tech Club", 2, 1, 2, 1) };
+        var stats = new List<ClubStat>
+        {
+            new("Tech Club", 2, 1, 2, 1)
+        };
 
-        // Act
         var console = new ConsoleReportStrategy().Render(stats);
         var csv = new CsvReportStrategy().Render(stats);
 
-        // Assert
         Assert.StartsWith("Club: Tech Club", console);
         Assert.StartsWith("Club,Members", csv);
         Assert.Contains("\"Tech Club\",2,1,2,1", csv);
     }
+
+    [Fact]
+    public void Strategy_CsvReport_EscapesQuotesInClubName()
+    {
+        var stats = new List<ClubStat>
+        {
+            new("Tech \"Club\"", 2, 1, 2, 1)
+        };
+
+        var csv = new CsvReportStrategy().Render(stats);
+
+        Assert.Contains("\"Tech \"\"Club\"\"\",2,1,2,1", csv);
+    }
+
 
     // ── Observer ──
     [Fact]

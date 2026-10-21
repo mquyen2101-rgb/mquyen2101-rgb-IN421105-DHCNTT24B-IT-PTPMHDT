@@ -1,3 +1,4 @@
+
 using System.Text;
 
 namespace EduHub.Ch02.Patterns.Strategies;
@@ -9,8 +10,13 @@ public class CsvReportStrategy : IReportStrategy
     public string Render(IReadOnlyList<ClubStat> stats)
     {
         var sb = new StringBuilder("Club,Members,Events,Registered,CheckedIn\n");
+
         foreach (var s in stats)
-            sb.Append($"\"{s.ClubName}\",{s.Members},{s.Events},{s.Registered},{s.CheckedIn}\n");
+        {
+            var escapedName = s.ClubName.Replace("\"", "\"\"");
+            sb.Append($"\"{escapedName}\",{s.Members},{s.Events},{s.Registered},{s.CheckedIn}\n");
+        }
+
         return sb.ToString();
     }
 }
