@@ -1,3 +1,4 @@
+
 using EduHub.Ch02.Domain;
 
 namespace EduHub.Ch02.Tests.Domain;
@@ -7,13 +8,10 @@ public class ClubTests
     [Fact]
     public void Create_WithValidName_ReturnsClubWithNameAndNewId()
     {
-        // Arrange
         const string name = "Tech Club";
 
-        // Act
         var club = Club.Create(name, "Câu lạc bộ công nghệ");
 
-        // Assert
         Assert.Equal(name, club.Name);
         Assert.NotEqual(Guid.Empty, club.Id);
     }
@@ -23,25 +21,18 @@ public class ClubTests
     [InlineData("   ")]
     public void Create_WithBlankName_ThrowsArgumentException(string name)
     {
-        // Arrange (tên rỗng hoặc toàn khoảng trắng đã nằm ở tham số)
+        var act = () => Club.Create(name, "Mô tả");
 
-        // Act
-        var act = () => Club.Create(name, "mô tả");
-
-        // Assert
         Assert.Throws<ArgumentException>(act);
     }
 
     [Fact]
     public void Create_WithNameLongerThan100_ThrowsArgumentException()
     {
-        // Arrange
         var longName = new string('a', Club.MaxNameLength + 1);
 
-        // Act
-        var act = () => Club.Create(longName, "mô tả");
+        var act = () => Club.Create(longName, "Mô tả");
 
-        // Assert
         Assert.Throws<ArgumentException>(act);
     }
 
@@ -49,15 +40,24 @@ public class ClubTests
     [InlineData(0, true)]
     [InlineData(49, true)]
     [InlineData(50, false)]
-    public void HasRoom_DependsOnCurrentMemberCount(int memberCount, bool expected)
+    public void HasRoom_DependsOnCurrentMemberCount(
+        int memberCount, bool expected)
     {
-        // Arrange
-        var club = Club.Create("Tech Club", "mô tả");
+        var club = Club.Create("Tech Club", "Mô tả");
 
-        // Act
         var result = club.HasRoom(memberCount);
 
-        // Assert
         Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void Create_WithNameExactly100Characters_Succeeds()
+    {
+        var name = new string('A', Club.MaxNameLength);
+
+        var club = Club.Create(name, "Test description");
+
+        Assert.Equal(100, club.Name.Length);
+        Assert.Equal(name, club.Name);
     }
 }
