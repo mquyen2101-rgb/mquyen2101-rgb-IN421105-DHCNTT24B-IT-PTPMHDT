@@ -39,11 +39,11 @@ File nguồn: `starter/Ch02.Refactor/ClubManager.cs`.
 
 ## 6. ISP - Interface Segregation Principle
 
-- Vị trí: thiết kế tổng thể của `ClubManager` tại dòng 28-116.
-- Vi phạm: Một lớp tập trung các thao tác quản lý CLB, thành viên, sự kiện, báo cáo và ghi log thay vì phân tách trách nhiệm qua các hợp đồng riêng.
-- Hậu quả: Các phần chỉ cần một nhóm chức năng vẫn phụ thuộc vào lớp có nhiều trách nhiệm không liên quan; khó bảo trì và kiểm thử từng phần.
-- Cách khắc phục: Phân tách interface theo chức năng, ví dụ `IClubRepository`, `IMemberRepository`, `IEventRepository`, `IAppLogger` và `INotificationService`.
+- **Vị trí:** Thiết kế lớp `ClubManager` tại dòng 28-116.
+- **Phân tích:** `ClubManager` tập trung nhiều chức năng quản lý câu lạc bộ, thành viên, sự kiện và báo cáo. Điều này cho thấy lớp có quá nhiều trách nhiệm, nhưng chưa đủ căn cứ để kết luận trực tiếp rằng ISP bị vi phạm vì chưa xác định được interface nào quá lớn hoặc buộc lớp triển khai các phương thức không cần thiết.
+- **Hậu quả:** Thiết kế tập trung nhiều chức năng làm tăng sự phụ thuộc giữa các phần, khiến việc bảo trì và kiểm thử từng chức năng khó khăn hơn.
+- **Cách khắc phục:** Phân tách trách nhiệm thành các service và interface phù hợp như `IClubRepository`, `IMemberRepository`, `IEventRepository`, `IAppLogger` và `INotificationService`. Nếu có interface quá lớn trong quá trình phát triển, cần tiếp tục tách interface theo nhu cầu sử dụng thực tế để tuân thủ ISP.
 
 ## Kết luận
 
-`ClubManager` là một God class, vi phạm rõ nhất SRP, OCP và DIP. Việc tách service, repository, logger, notification và report strategy giúp giảm phụ thuộc, dễ kiểm thử và mở rộng hệ thống.
+`ClubManager` là một God class, trong đó các vi phạm thể hiện rõ nhất là SRP, OCP và DIP. Các trách nhiệm kiểm tra dữ liệu, quản lý câu lạc bộ, ghi log, gửi thông báo và xuất báo cáo được tập trung trong cùng một lớp. Việc tách service, repository, logger, notification và report strategy giúp giảm sự phụ thuộc, nâng cao khả năng kiểm thử, bảo trì và mở rộng hệ thống. Việc đánh giá ISP cần dựa trên các interface cụ thể, không chỉ dựa vào số lượng trách nhiệm của một lớp.
